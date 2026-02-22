@@ -13,6 +13,7 @@ var secretKey = jwtSettings.GetValue<string>("SecretKey");
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ITestService, TestService>();
+builder.Services.AddScoped<IResultService, ResultService>();
 
 builder.Services.AddAuthentication(options =>
 {
