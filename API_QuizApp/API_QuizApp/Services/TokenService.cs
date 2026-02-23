@@ -24,7 +24,7 @@ namespace API_QuizApp.Services
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.Role)
             };
-            var secretKey = _configuration["JwtSettings:SecretKey"];
+            var secretKey = _configuration["JwtSettings:SecurityKey"];
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

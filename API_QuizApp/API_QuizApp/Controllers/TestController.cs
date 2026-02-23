@@ -18,13 +18,15 @@ namespace API_QuizApp.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllTests()
         {
-            var test = await _testService.GetAllTestsAsync();
+            int userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value);
+            var test = await _testService.GetAllTestsAsync(userId);
             return Ok(test);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTestById(int id)
         {
-            var test = await _testService.GetTestByIdAsync(id);
+            int userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value);
+            var test = await _testService.GetTestByIdAsync(id, userId);
             if(test == null)
                 return NotFound();
             return Ok(test);

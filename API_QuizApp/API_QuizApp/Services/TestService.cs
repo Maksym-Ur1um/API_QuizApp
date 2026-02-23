@@ -15,10 +15,12 @@ namespace API_QuizApp.Services
             _db = db;
         }
 
-        public async Task<List<TestListDto>> GetAllTestsAsync()
+        public async Task<List<TestListDto>> GetAllTestsAsync(int userId)
         {
 
-            List<TestListDto> testList = await _db.Tests.Select(t => new TestListDto
+            List<TestListDto> testList = await _db.Tests
+                .Where(t => t.AssignedTests.Any(i => i.UserId == userId)).
+                Select(t => new TestListDto
             {
                 Id = (t.TestId),
                 SubjectName = t.SubjectName
@@ -27,9 +29,13 @@ namespace API_QuizApp.Services
             return testList;
         }
 
-        public async Task<TestDetailDto> GetTestByIdAsync(int id)
+        public async Task<TestDetailDto> GetTestByIdAsync(int id, int userId)
         {
-            Test dbTestDetail = await _db.Tests.Include(q => q.Questions).ThenInclude(a => a.Answers).FirstOrDefaultAsync(x => x.TestId == id);
+            Test dbTestDetail = await _db.Tests
+                .Where(t => t.AssignedTests.Any(i => i.UserId == userId))
+                .Include(q => q.Questions)
+                .ThenInclude(a => a.Answers)
+                .FirstOrDefaultAsync(x => x.TestId == id);
 
             if (dbTestDetail == null)
                 return null;

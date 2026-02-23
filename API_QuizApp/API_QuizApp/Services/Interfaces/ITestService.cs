@@ -4,8 +4,8 @@ namespace API_QuizApp.Services.Interfaces
 {
     public interface ITestService
     {
-        public Task<List<TestListDto>> GetAllTestsAsync();
-        public Task<TestDetailDto> GetTestByIdAsync(int id);
+        public Task<List<TestListDto>> GetAllTestsAsync(int userId);
+        public Task<TestDetailDto> GetTestByIdAsync(int id, int userId);
 
     }
 }
