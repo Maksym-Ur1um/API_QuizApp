@@ -19,8 +19,7 @@ namespace API_QuizApp.Controllers
         [HttpPost("submit")]
         public async Task<IActionResult> SubmitTest(SubmitTestDto submitData)
         {
-            int userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value);
-            var result = await _resultService.SubmitTestResultAsync(userId,  submitData);
+            var result = await _resultService.SubmitTestResultAsync( submitData);
             return Ok(result);
         }
     }

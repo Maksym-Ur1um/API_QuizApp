@@ -14,7 +14,7 @@ namespace API_QuizApp.Services
             _db = db;
         }
 
-        public async Task<TestResultDto> SubmitTestResultAsync(int userId, SubmitTestDto submitData)
+        public async Task<TestResultDto> SubmitTestResultAsync(SubmitTestDto submitData)
         {
             string testTitle = await _db.Tests.Where(t => t.TestId == submitData.TestId)
                 .Select(t => t.SubjectName)

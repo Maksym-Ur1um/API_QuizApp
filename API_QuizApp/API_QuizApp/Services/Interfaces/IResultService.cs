@@ -4,6 +4,6 @@ namespace API_QuizApp.Services.Interfaces
 {
     public interface IResultService
     {
-        Task<TestResultDto> SubmitTestResultAsync(int userId, SubmitTestDto submitData);
+        Task<TestResultDto> SubmitTestResultAsync(SubmitTestDto submitData);
     }
 }
