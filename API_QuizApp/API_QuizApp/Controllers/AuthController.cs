@@ -21,15 +21,18 @@ namespace API_QuizApp.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
-            var user = await _quizDbContext.Users.FirstOrDefaultAsync(u =>
-                u.Email == loginDto.Email && u.PasswordHash == loginDto.Password
-            );
+            var user = await _quizDbContext.Users.
+                FirstOrDefaultAsync(u => u.Email == loginDto.Email);
             if (user == null)
             {
                 return Unauthorized("Неверный логин или пароль");
             }
-            var token = _tokenService.GenerateJwtToken(user);
-            return Ok(new { Token = token });
+            if (BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
+            {
+                var token = _tokenService.GenerateJwtToken(user);
+                return Ok(new { Token = token });
+            }
+            return Unauthorized("Неверный логин или пароль");
         }
     }
 }
