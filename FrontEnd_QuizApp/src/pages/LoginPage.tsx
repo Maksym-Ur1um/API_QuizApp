@@ -3,6 +3,16 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setCredentials } from "../store/authSlice";
 import { login } from "../api/auth.api";
+import {
+  Container,
+  Col,
+  Row,
+  Alert,
+  Button,
+  Form,
+  Card,
+} from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -23,23 +33,42 @@ export default function LoginPage() {
     }
   }
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => {
-          setEmail(e.target.value);
-        }}
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => {
-          setPassword(e.target.value);
-        }}
-      />
-      {error && <div style={{color: 'red'}}>{error}</div>}
-      <button type="submit">Sign in</button>
-    </form>
+    <Container style={{marginTop: "20vh"}}>
+      <Row className="justify-content-center ">
+        <Col md={5}>
+          <Card className="shadow-sm">
+            <Card.Body>
+              <h2 className="text-center mb-4">Sign in</h2>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                    }}
+                  />
+                </Form.Group>
+                {error && <Alert variant="danger">{error}</Alert>}
+                <Button className="w-100" variant="primary" type="submit">
+                  Sign in
+                </Button>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 }

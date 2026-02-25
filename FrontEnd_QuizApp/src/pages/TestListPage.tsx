@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { getTests } from "../api/test.api";
 import type { TestSummary } from "../types/test.types";
 import { Link } from "react-router-dom";
+import { Card, Col, Container, Row } from "react-bootstrap";
 
 export default function TestListPage() {
   const [tests, setTests] = useState<TestSummary[]>([]);
@@ -21,13 +22,23 @@ export default function TestListPage() {
   }, []);
   if (error) return <div style={{ color: "red" }}>{error}</div>;
   return (
-    <div>
-      {tests.map((test) => (
-        <div key={test.id}>
-          <div>{test.subjectName}</div>
-          <Link to={`/test/${test.id}`}>Start</Link>
-        </div>
-      ))}
-    </div>
+    <Container className="mt-5">
+      <div>
+        <Row xs={1} md={3} lg={5} className="g-4">
+          {tests.map((test) => (
+              <Col key={test.id}>
+                <Card bg="primary" text="white" className="h-100 shadow-sm rounded-4">
+                  <Card.Body className="flex-column">
+                    <Card.Title className="mb-4">
+                      {test.subjectName}
+                    </Card.Title>
+                    <Link to={`/test/${test.id}`} className="mt-auto w-100 btn btn-warning">Start</Link>
+                  </Card.Body>
+                </Card>
+              </Col>
+          ))}
+        </Row>
+      </div>
+    </Container>
   );
 }

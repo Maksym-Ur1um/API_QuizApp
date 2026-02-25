@@ -5,6 +5,15 @@ import { getTestById } from "../api/test.api";
 import type { TestDetail } from "../types/test.types";
 import { useNavigate } from "react-router-dom";
 import { submitTest } from "../api/test.api";
+import {
+  Button,
+  Container,
+  Row,
+  Col,
+  Card,
+  Form,
+  Alert,
+} from "react-bootstrap";
 
 export default function ActiveTestPage() {
   const { id } = useParams<{ id: string }>();
@@ -22,8 +31,8 @@ export default function ActiveTestPage() {
 
   async function handleSubmitTest() {
     setValidationError("");
-    if(!testData) return;
-    if(Object.keys(selectedAnswers).length < testData.questions.length) {
+    if (!testData) return;
+    if (Object.keys(selectedAnswers).length < testData.questions.length) {
       setValidationError("Please answer all questions");
       return;
     }
@@ -31,18 +40,18 @@ export default function ActiveTestPage() {
     const formattedAnswers = submittedAnswers.map((submittedAnswer) => {
       return {
         questionId: Number(submittedAnswer[0]),
-        selectedAnswerId: submittedAnswer[1]
-      }
-    })
+        selectedAnswerId: submittedAnswer[1],
+      };
+    });
     const requestData = {
       testId: Number(id),
-      answers: formattedAnswers
-    }
+      answers: formattedAnswers,
+    };
     try {
-      const responseData = await submitTest(requestData)
-      Maps(`/results/${id}`, {state: responseData})
+      const responseData = await submitTest(requestData);
+      Maps(`/results/${id}`, { state: responseData });
     } catch {
-      setError("Failed to submit test")
+      setError("Failed to submit test");
     }
   }
 
@@ -61,28 +70,49 @@ export default function ActiveTestPage() {
   if (testData === null) return <div>Loading test...</div>;
 
   return (
-    <div>
-      <h1>{testData.title}</h1>
-      {testData.questions.map((question) => (
-        <div key={question.id}>
-          <div>{question.questionText}</div>
-          {question.answers.map((answer) => (
-            <div key={answer.id}>
-              <label>
-                <input
-                  type="radio"
-                  name={String(question.id)}
-                  checked={selectedAnswers[question.id] === answer.id}
-                  onChange={() => handleAnswerSelect(question.id, answer.id)}
-                />
-                {answer.answerText}
-              </label>
-            </div>
-          ))}
-        </div>
-      ))}
-      <button onClick={handleSubmitTest}>Finish Test</button>
-      {validationError && <div style={{ color: "red" }}>{validationError}</div>}
+    <div className="bg-light min-vh-100 py-5">
+      <Container>
+        <Row className="justify-content-center">
+          <Col md={8} lg={6}>
+            <Card className="mb-4 shadow-sm border-0 border-top border-primary border-5">
+              <Card.Body>
+                <h1>{testData.title}</h1>
+              </Card.Body>
+            </Card>
+            {testData.questions.map((question) => (
+              <Card key={question.id} className="mb-4 shadow-sm border-0">
+                <Card.Body>
+                  <Card.Title>{question.questionText}</Card.Title>
+                  {question.answers.map((answer) => (
+                    <Form.Check
+                      type="radio"
+                      name={String(question.id)}
+                      label={answer.answerText}
+                      id={`question-${question.id}-answer-${answer.id}`}
+                      checked={selectedAnswers[question.id] === answer.id}
+                      onChange={() =>
+                        handleAnswerSelect(question.id, answer.id)
+                      }
+                      className="mb-2"
+                    ></Form.Check>
+                  ))}
+                </Card.Body>
+              </Card>
+            ))}
+            <Button
+              variant="success"
+              size="lg"
+              onClick={handleSubmitTest}
+              className="w-100 mt-4"
+            >
+              Finish Test
+            </Button>
+            {validationError && (
+              <Alert variant="danger">{validationError}</Alert>
+            )}
+          </Col>
+        </Row>
+      </Container>
     </div>
   );
 }
